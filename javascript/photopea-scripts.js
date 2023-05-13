@@ -73,3 +73,7 @@ function selectionExists() {
     // exists, but bounds only has values if a selection exists.
     app.echoToOE(app.activeDocument.selection.bounds != null);
 }
+
+function getActiveDocumentSize() {
+    app.echoToOE(app.activeDocument.width + "," + app.activeDocument.height);
+}

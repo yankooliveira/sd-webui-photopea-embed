@@ -8,10 +8,12 @@ function onPhotopeaLoaded(iframe) {
     photopeaWindow = iframe.contentWindow;
     photopeaIframe = iframe;
 
-    // Clone some buttons to send the contents of galleries in txt2img and img2img tab to Photopea. 
-    // You can also just copy-paste the images directly but these are the ones I use the most.
+    // Clone some buttons to send the contents of galleries in txt2img, img2img and extras tabs
+    // to Photopea. You can also just copy-paste the images directly but these are the ones I
+    // use the most.
     createSendToPhotopeaButton("image_buttons_txt2img", txt2img_gallery);
     createSendToPhotopeaButton("image_buttons_img2img", img2img_gallery);
+    createSendToPhotopeaButton("image_buttons_extras", extras_gallery);
 
     // Listen to the size slider changes.
     gradioApp().getElementById("photopeaIframeSlider").addEventListener('input', (event) => {
@@ -75,13 +77,33 @@ function activeLayerOnly() {
 
 // Gets the currently selected image in a WebUI gallery and opens it in Photopea.
 function openImageInPhotopea(originGallery) {
-    const img = originGallery.querySelectorAll("img")[0].src;
+    var imageSizeMatches = true;
+    const outgoingImg = originGallery.querySelectorAll("img")[0];
     goToPhotopeaTab();
-    blobTob64(img, (imageData) => {
-        // When opening a document via the message, Photopea will create it as a smart object layer.
-        // We rasterize it to avoid a few button presses and make it instantly editable.
-        postMessageToPhotopea(`app.open("${imageData}", null, true);`, "*")
-            .then(() => postMessageToPhotopea(`app.activeDocument.activeLayer.rasterize();`, "*"));
+
+    // First, check the image size to see if we have matching sizes. If it's bigger, we open it
+    // as a new document. Otherwise, we just append it to the current document as a new layer.
+    postMessageToPhotopea(getPhotopeaScriptString(getActiveDocumentSize)).then((response) => {
+        const activeDocSize = response[0].split(",");
+        if (outgoingImg.naturalWidth > activeDocSize[0] || 
+            outgoingImg.naturalHeight > activeDocSize[1]) {
+            imageSizeMatches = false;
+        }
+
+        blobTob64(outgoingImg.src, (imageData) => {
+            // Actually open the image, passing `imageSizeMatches` into Photopea's "open as new document" parameter.
+            postMessageToPhotopea(`app.open("${imageData}", null, ${imageSizeMatches});`, "*")
+                .then(() => {
+                    if (imageSizeMatches) {
+                        postMessageToPhotopea(`app.activeDocument.activeLayer.rasterize();`, "*");
+                    } else {
+                        postMessageToPhotopea(
+                            `alert("New document created as the image sent is bigger than the active document");`,
+                            "*");
+                    }
+                });
+        });
+
     });
 }
 
@@ -205,10 +227,10 @@ function setImageOnControlNetInput(controlNetDiv, controlNetModelIndex, file) {
         // series of Controlnet tabs. The one selected in the dropdown will be passed in by the
         // `controlnetModelIndex`.
         const tabs = controlNetDiv.querySelectorAll("div.tab-nav > button");
-        if(tabs !== null && tabs.length > 1) {
+        if (tabs !== null && tabs.length > 1) {
             tabs[controlNetModelIndex].click();
         }
-        
+
         imageInput = controlNetDiv.querySelectorAll("input[type='file']")[controlNetModelIndex];
         setImageOnInput(imageInput, file);
     }
