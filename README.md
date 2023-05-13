@@ -34,9 +34,17 @@ In case you have the ControlNet extension installed, you'll also have:
 * **`Send to img2img ControlNet` button**: sends the image to ControlNet in the ixt2img tab.
 
 ### WebUI image galleries
-In the `txt2txt` and `img2img` tab galleries (where your generated images appear), there will also be a **`Send to Photopea`** button. You can press it to send the currently selected image back to the Photopea tab. It will be added as a new rasterized layer to the currently open document.
+In the `txt2txt`,  `img2img` and `extras` tab galleries (where your generated images appear), there will also be a **`Send to Photopea`** button. You can press it to send the currently selected image back to the Photopea tab. It will be added as a new rasterized layer to the currently open document.
+
+**Known bug:** when large files are passed in, they might not instantly be rasterized (this happens due to Photopea loading the image asynchronously, but sending the response to the load request *before* the image is fully loaded).
 
 You can also copy and paste the generated results normally into Photopea, and have multiple documents open etc.
+
+## Changelog
+
+### 2023-05-13
+- Added `Send to Photopea` button in the `extras` tab.
+- Fixed a bug where exporting a single layer, or using inpaint selection, would not work on documents with folders in them.
 
 ## Code & Usage Licenses
 I've tried to comment the code thoroughly, especially because it's mostly JS hacks. Feel free to take it apart and reuse it.
