@@ -9,7 +9,21 @@
 // below, then its done, and that solves the promise, but we end up with a dangling "done"
 // response from the script execution message. But hey, if it works... ^^'
 function exportSelectedLayerOnly() {
-    var allLayers = app.activeDocument.layers;
+    // Gets all layers recursively, including the ones inside folders.
+    function getAllArtLayers (document, layerCollection){
+        for (var i = 0; i < document.layers.length; i++){
+            var currentLayer = document.layers[i];
+            if (currentLayer.typename === "ArtLayer"){
+                layerCollection.push(currentLayer);
+            } else {
+                getAllArtLayers(currentLayer, layerCollection);
+            }
+        }
+        return layerCollection;
+    }
+
+    var allLayers = []
+    allLayers = getAllArtLayers(app.activeDocument, allLayers);
     // Make all layers except the currently selected one invisible, and store
     // their initial state.
     layerStates = []
