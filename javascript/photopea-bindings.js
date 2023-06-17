@@ -32,6 +32,7 @@ function onPhotopeaLoaded(iframe) {
 function createSendToPhotopeaButton(queryId, gallery) {
     const existingButton = gradioApp().querySelector(`#${queryId} button`);
     const newButton = existingButton.cloneNode(true);
+    newButton.style.display = "flex";
     newButton.id = `${queryId}_open_in_photopea`;
     newButton.textContent = "Send to Photopea";
     newButton.addEventListener("click", () => openImageInPhotopea(gallery));
