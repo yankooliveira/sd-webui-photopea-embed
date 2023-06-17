@@ -11,9 +11,9 @@ function onPhotopeaLoaded(iframe) {
     // Clone some buttons to send the contents of galleries in txt2img, img2img and extras tabs
     // to Photopea. You can also just copy-paste the images directly but these are the ones I
     // use the most.
-    createSendToPhotopeaButton("image_buttons_txt2img", txt2img_gallery);
-    createSendToPhotopeaButton("image_buttons_img2img", img2img_gallery);
-    createSendToPhotopeaButton("image_buttons_extras", extras_gallery);
+    createSendToPhotopeaButton("image_buttons_txt2img", window.txt2img_gallery);
+    createSendToPhotopeaButton("image_buttons_img2img", window.img2img_gallery);
+    createSendToPhotopeaButton("image_buttons_extras", window.extras_gallery);
 
     // Listen to the size slider changes.
     gradioApp().getElementById("photopeaIframeSlider").addEventListener('input', (event) => {
