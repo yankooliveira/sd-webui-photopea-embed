@@ -215,9 +215,7 @@ function sendImageWithMaskSelectionToWebUi() {
 
 // Navigates to the correct ControlNet model tab, then sets the image.
 function setImageOnControlNetInput(controlNetDiv, controlNetModelIndex, file) {
-    // If we can't find any iframes, the ControlNet accordion is closed.
-    var iframes = controlNetDiv.querySelectorAll("iframe");
-    if (iframes.length == 0) {
+    if (controlNetAccordionIsCollapsed(controlNetDiv)) {
         // The accordion is not open. Find the little icon arrow and click it (yes, if the arrow
         // ever changes, this will break).
         controlNetDiv.querySelector("span.icon").click();
@@ -300,4 +298,25 @@ async function waitForWebUiUpdate(divToWatch) {
     });
 
     return await promise;
+}
+
+// Gradio keeps changing how their DOM works, so we just use some heuristic here to find out
+// which child div is the one that contains the ControlNet image inputs. If that one is not
+// displayed, we consider the accordion is closed. Other methods include direct indices, or
+// checking if the arrow is tilted 90 degrees on the style, both seemed flakier.
+function controlNetAccordionIsCollapsed(controlNetDiv) {
+    // Get the immediate children of the ControlNet accordion. One of them will contain the
+    // actual image widgets.
+    const directDescendents = controlNetDiv.children;
+    // All of the image iframes are contained within the same content div, so we can use any.
+    const sampleIframe = controlNetDiv.querySelectorAll("iframe")[0];
+
+    for(var i = 0; i < directDescendents.length; i++) {
+        if(directDescendents[i].contains(sampleIframe)) {
+            return directDescendents[i].style['display'] === 'none';
+        }
+    }
+    // As a fallback, to prevent constantly triggering the toggle in case future versions break
+    // this heuristic, we just return false.
+    return false;
 }
