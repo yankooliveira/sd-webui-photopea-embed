@@ -42,6 +42,11 @@ You can also copy and paste the generated results normally into Photopea, and ha
 
 ## Changelog
 
+### 2023-06-17
+- Fixed ControlNet tab auto-uncollapse when sending images from Photopea.
+- Patched `Send to Photopea` on Vladmandic fork (solution suggested by [bananasss00](https://github.com/bananasss00))
+- Fixed a bug where `Send to Photopea` would not appear when using `--hide-ui-dir-config` (solution suggested by [Odls](https://github.com/Odls))
+
 ### 2023-05-13
 - Added `Send to Photopea` button in the `extras` tab.
 - Fixed a bug where exporting a single layer, or using inpaint selection, would not work on documents with folders in them.
