@@ -78,6 +78,9 @@ function activeLayerOnly() {
 
 // Gets the currently selected image in a WebUI gallery and opens it in Photopea.
 function openImageInPhotopea(originGallery) {
+    if (typeof originGallery.item === "function") {
+        originGallery = originGallery.item(0);
+    }
     var imageSizeMatches = true;
     const outgoingImg = originGallery.querySelectorAll("img")[0];
     goToPhotopeaTab();
