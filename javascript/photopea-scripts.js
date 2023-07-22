@@ -58,7 +58,7 @@ function exportSelectedLayerOnly(format, layerSelector) {
             makeLayerVisible(layer);
         }
     }
-    app.activeDocument.saveToOE(format);
+    app.activeDocument.saveToOE(format || 'JPG');
 
     for (let i = 0; i < allLayers.length; i++) {
         const layer = allLayers[i];
