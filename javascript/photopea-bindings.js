@@ -34,9 +34,10 @@ function createSendToPhotopeaButton(queryId, gallery) {
     const newButton = existingButton.cloneNode(true);
     newButton.style.display = "flex";
     newButton.id = `${queryId}_open_in_photopea`;
-    newButton.textContent = "Send to Photopea";
+    newButton.title = "Send to Photopea"
+    newButton.textContent = "\u{1F99C}";
     newButton.addEventListener("click", () => openImageInPhotopea(gallery));
-    gradioApp().querySelector(`#${queryId}`).appendChild(newButton);
+    existingButton.parentNode.appendChild(newButton);
 }
 
 // Switches to the "Photopea" tab by finding and clicking on the DOM button.
@@ -230,7 +231,10 @@ function setImageOnControlNetInput(controlNetDiv, controlNetModelIndex, file) {
             tabs[controlNetModelIndex].click();
         }
 
-        imageInput = controlNetDiv.querySelectorAll("input[type='file']")[controlNetModelIndex];
+        // HACK: multiplying the index by 2 to match the proper input on the newest ControlNet extension
+        // was determined empirically and will likely break in the future (as all other DOM-based 
+        // addressing tends to)
+        imageInput = controlNetDiv.querySelectorAll("input[type='file']")[controlNetModelIndex * 2];
         setImageOnInput(imageInput, file);
     }
     );

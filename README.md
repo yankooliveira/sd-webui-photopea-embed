@@ -1,4 +1,4 @@
-# Photopea Stable Diffusion WebUI Extension
+# &#129436; Photopea Stable Diffusion WebUI Extension
 
 [![Demo video](https://img.youtube.com/vi/f_OXiNAvtII/0.jpg)](https://youtu.be/f_OXiNAvtII)
 
@@ -7,6 +7,8 @@
 In the tab, you will have an embedded Photopea editor and a few buttons to send the image to different WebUI sections, and also buttons to send generated content to the embeded Photopea.
 
 Consider supporting Photopea by [going premium](https://www.photopea.com/api/accounts)!
+
+Also consider using the much better integrated (and more actively maintained) [Stable Diffusion PS Pea](https://github.com/huchenlei/stable-diffusion-ps-pea) extension by [huchenlei](https://github.com/huchenlei/)!
 
 ## Installation
 
@@ -36,11 +38,20 @@ In case you have the ControlNet extension installed, you'll also have:
 ### WebUI image galleries
 In the `txt2txt`,  `img2img` and `extras` tab galleries (where your generated images appear), there will also be a **`Send to Photopea`** button. You can press it to send the currently selected image back to the Photopea tab. It will be added as a new rasterized layer to the currently open document.
 
-**Known bug:** when large files are passed in, they might not instantly be rasterized (this happens due to Photopea loading the image asynchronously, but sending the response to the load request *before* the image is fully loaded).
-
 You can also copy and paste the generated results normally into Photopea, and have multiple documents open etc.
 
+**Known bugs:** 
+
+* When large files are passed in, they might not instantly be rasterized (this happens due to Photopea loading the image asynchronously, but sending the response to the load request *before* the image is fully loaded).
+* In some scenarios, the `Send to Photopea`` buttons do not work. This appears to happen when they are created _before_ the galleries are fully initialized. If you encounter this, try restarting the UI. If you have clear repro steps, please [create an issue](https://github.com/yankooliveira/sd-webui-photopea-embed/issues) or comment to an existing one.
+
+
 ## Changelog
+
+### 2023-09-30
+- Fixes a bug that would not properly show ControlNet index dropdown
+- Fixes a bug where it would not be possible to send to different ControlNet units
+- Changes the `Send to Photopea` button to match the new UI style, officially adopting &#129436; as a mascot 
 
 ### 2023-06-17
 - Fixed ControlNet tab auto-uncollapse when sending images from Photopea.

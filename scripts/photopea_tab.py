@@ -38,7 +38,7 @@ def on_ui_tabs():
             )
             # Controlnet might have more than one model tab (set by the 'control_net_max_models_num' setting).
             try:
-                num_controlnet_models = opts.control_net_max_models_num
+                num_controlnet_models = opts.control_net_unit_count
             except:
                 num_controlnet_models = 1
 
