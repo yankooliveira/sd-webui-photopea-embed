@@ -64,7 +64,9 @@ function goToImg2ImgInpaintUpload(onFinished) {
         const inpaintButton =
             Array.from(allButtons).find(button => button.textContent === 'Inpaint upload ');
         inpaintButton.click();
-        onFinished();
+        setTimeout(() => {
+            onFinished();
+        }, 1);
     });
 }
 
@@ -125,7 +127,8 @@ function getAndSendImageToWebUITab(webUiTab, sendToControlnet, imageWidgetIndex)
             // base64 string, then to blob, so it can be sent to a specific image widget in WebUI.
             // There's likely a direct ArrayBuffer -> Blob conversion, but we're already using b64
             // as an intermediate format.
-            const base64Png = base64ArrayBuffer(resultArray[0]);
+            const buffIdx = resultArray.findIndex(x => x?.constructor?.name === 'ArrayBuffer');
+            const base64Png = base64ArrayBuffer(resultArray[buffIdx]);
             sendImageToWebUi(
                 webUiTab,
                 sendToControlnet,
@@ -190,7 +193,8 @@ function sendImageWithMaskSelectionToWebUi() {
 
                     postMessageToPhotopea(fullMessage).then((resultArray) => {
                         // Set the mask.
-                        const base64Png = base64ArrayBuffer(resultArray[0]);
+                        const buffIdx = resultArray.findIndex(x => x?.constructor?.name === 'ArrayBuffer');
+                        const base64Png = base64ArrayBuffer(resultArray[buffIdx]);
                         const maskInput = gradioApp().getElementById("img_inpaint_mask").querySelector("input");
                         const blob = b64toBlob(base64Png, "image/png");
                         const file = new File([blob], "photopea_output.png");
@@ -203,7 +207,8 @@ function sendImageWithMaskSelectionToWebUi() {
 
                         postMessageToPhotopea(saveMessage)
                             .then((resultArray) => {
-                                const base64Png = base64ArrayBuffer(resultArray[0]);
+                                const buffIdx = resultArray.findIndex(x => x?.constructor?.name === 'ArrayBuffer');
+                                const base64Png = base64ArrayBuffer(resultArray[buffIdx]);
                                 const baseImgInput = gradioApp().getElementById("img_inpaint_base").querySelector("input");
                                 const blob = b64toBlob(base64Png, "image/png");
                                 const file = new File([blob], "photopea_output.png");
