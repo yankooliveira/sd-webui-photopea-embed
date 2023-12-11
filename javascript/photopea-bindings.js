@@ -64,7 +64,9 @@ function goToImg2ImgInpaintUpload(onFinished) {
         const inpaintButton =
             Array.from(allButtons).find(button => button.textContent.includes('Inpaint upload'));
         inpaintButton.click();
-        onFinished();
+        setTimeout(() => {
+            onFinished();
+        }, 1);
     });
 }
 
