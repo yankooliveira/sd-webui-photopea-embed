@@ -62,9 +62,11 @@ function goToImg2ImgInpaintUpload(onFinished) {
     waitForWebUiUpdate(img2imgdiv).then(() => {
         const allButtons = img2imgdiv.querySelectorAll("div.tab-nav > button");
         const inpaintButton =
-            Array.from(allButtons).find(button => button.textContent === 'Inpaint upload ');
+            Array.from(allButtons).find(button => button.textContent.includes('Inpaint upload'));
         inpaintButton.click();
-        onFinished();
+        setTimeout(() => {
+            onFinished();
+        }, 1);
     });
 }
 
