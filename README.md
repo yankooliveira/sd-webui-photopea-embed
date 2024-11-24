@@ -1,3 +1,9 @@
+## Maintenance status: Legacy | Unmaintained
+I haven't had enough bandwidth to properly maintain this project for a while now, so as of November 2024, I'm considering it officially halted. It should still (somewhat) work on SD WebUI, but I never really used Forge, so it's probably _very_ buggy there.
+Consider using the much better integrated [Stable Diffusion PS Pea](https://github.com/huchenlei/stable-diffusion-ps-pea) extension by [huchenlei](https://github.com/huchenlei/)!
+
+Feel free to ping me if you would like to take over ownership!
+
 # &#129436; Photopea Stable Diffusion WebUI Extension
 
 [![Demo video](https://img.youtube.com/vi/f_OXiNAvtII/0.jpg)](https://youtu.be/f_OXiNAvtII)
@@ -7,8 +13,6 @@
 In the tab, you will have an embedded Photopea editor and a few buttons to send the image to different WebUI sections, and also buttons to send generated content to the embeded Photopea.
 
 Consider supporting Photopea by [going premium](https://www.photopea.com/api/accounts)!
-
-Also consider using the much better integrated (and more actively maintained) [Stable Diffusion PS Pea](https://github.com/huchenlei/stable-diffusion-ps-pea) extension by [huchenlei](https://github.com/huchenlei/)!
 
 ## Installation
 
