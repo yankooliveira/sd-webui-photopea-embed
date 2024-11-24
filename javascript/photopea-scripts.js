@@ -8,36 +8,61 @@
 // postMessageToPhotopea, then receive the data for the internal app.activeDocument.saveToOE("jpg");
 // below, then its done, and that solves the promise, but we end up with a dangling "done"
 // response from the script execution message. But hey, if it works... ^^'
-function exportSelectedLayerOnly() {
-    // Gets all layers recursively, including the ones inside folders.
-    function getAllArtLayers (document, layerCollection){
-        for (var i = 0; i < document.layers.length; i++){
-            var currentLayer = document.layers[i];
-            if (currentLayer.typename === "ArtLayer"){
-                layerCollection.push(currentLayer);
+function exportSelectedLayerOnly(format, layerSelector) {
+    const MAX_NESTING = 10;
+    function makeLayerVisible(layer) {
+        let currentLayer = layer;
+        let nest = 0;
+
+        while (currentLayer != app.activeDocument && nest < MAX_NESTING) {
+            nest++;
+            currentLayer.visible = true;
+            if (currentLayer.parent.typename != 'Document') {
+                currentLayer = currentLayer.parent;
             } else {
-                getAllArtLayers(currentLayer, layerCollection);
+                break;
             }
         }
-        return layerCollection;
+    }
+    // Gets all layers recursively, including the ones inside folders.
+    function getAllArtLayers(document) {
+        let allArtLayers = [];
+
+        for (let i = 0; i < document.layers.length; i++) {
+            const currentLayer = document.layers[i];
+            allArtLayers.push(currentLayer);
+            if (currentLayer.typename === "LayerSet") {
+                allArtLayers = allArtLayers.concat(getAllArtLayers(currentLayer));
+            }
+        }
+        return allArtLayers;
     }
 
-    var allLayers = []
-    allLayers = getAllArtLayers(app.activeDocument, allLayers);
+    const allLayers = getAllArtLayers(app.activeDocument);
     // Make all layers except the currently selected one invisible, and store
     // their initial state.
-    layerStates = []
-    for (var i = 0; i < allLayers.length; i++) {
-        layerStates.push(allLayers[i].visible)
-        allLayers[i].visible = allLayers[i] == app.activeDocument.activeLayer
+    const layerStates = [];
+    for (let i = 0; i < allLayers.length; i++) {
+        const layer = allLayers[i];
+        layerStates.push(layer.visible);
     }
+    // Hide all layers to begin with
+    for (let i = 0; i < allLayers.length; i++) {
+        const layer = allLayers[i];
+        layer.visible = false;
+    }
+    for (let i = 0; i < allLayers.length; i++) {
+        const layer = allLayers[i];
+        const selected = layerSelector ? layerSelector(layer) : layer.selected;
+        if (selected) {
+            makeLayerVisible(layer);
+        }
+    }
+    app.activeDocument.saveToOE(format || 'JPG');
 
-    // Output the image. We output JPG to make sure we don't end up with transparent backgrounds.
-    app.activeDocument.saveToOE("JPG");
-
-    // Restore layers
-    for (var i = 0; i < allLayers.length; i++) {
-        allLayers[i].visible = layerStates[i]
+    for (let i = 0; i < allLayers.length; i++) {
+        const layer = allLayers[i];
+        layer.visible = layerStates[i];
     }
 }
 
